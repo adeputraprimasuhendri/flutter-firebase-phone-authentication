@@ -1,6 +1,6 @@
-# app
+# Simple Flutter Firebase Phone Authentication App
 
-Aplikasi Sistem Informasi Kemahasiswaan
+Simple Flutter Firebase Phone Authentication App
 
 ## Getting Started
 
