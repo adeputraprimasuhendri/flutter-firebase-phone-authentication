@@ -24,4 +24,11 @@ class AuthService {
   signIn(AuthCredential authCredential){
     FirebaseAuth.instance.signInWithCredential(authCredential);
   }
+
+  signInWithOTP(smsCode, verId){
+    AuthCredential authCredential = PhoneAuthProvider.getCredential(
+        verificationId: verId,
+        smsCode: smsCode);
+    signIn(authCredential);
+  }
 }

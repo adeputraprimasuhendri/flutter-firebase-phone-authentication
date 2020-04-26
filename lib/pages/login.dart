@@ -9,7 +9,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = new GlobalKey<FormState>();
-  String _phoneNumber, _verificationId;
+  String _phoneNumber, _verificationId, _smsCode;
+  bool _smsSent = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,12 +22,26 @@ class _LoginState extends State<Login> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
+            _smsSent ? Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: TextFormField(
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
-                  hintText: 'Masukkan Nomor Telepon'
+                    hintText: 'Masukkan Kode OTP'
+                ),
+                onChanged: (val){
+                  setState(() {
+                    this._smsCode = val;
+                  });
+                },
+              ),
+            ): Container(),
+            _smsSent ? Container() : Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: TextFormField(
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                    hintText: 'Masukkan Nomor Telepon'
                 ),
                 onChanged: (val){
                   setState(() {
@@ -39,10 +54,10 @@ class _LoginState extends State<Login> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: RaisedButton(
                 child: Center(
-                  child: Text('Login'),
+                  child: _smsSent ? Text('Verifikasi') : Text('Login'),
                 ),
                 onPressed: (){
-                  verifyPhone(_phoneNumber);
+                  _smsSent ? AuthService().signInWithOTP(_smsCode, _verificationId) : verifyPhone(_phoneNumber);
                 },
               ),
             )
@@ -60,13 +75,16 @@ class _LoginState extends State<Login> {
     };
     final PhoneCodeSent smsSent = (String verId, [int forceResend]){
       this._verificationId = verId;
+      setState(() {
+        this._smsSent = true;
+      });
     };
     final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId){
       this._verificationId = verId;
     };
     await FirebaseAuth.instance.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        timeout: const Duration(seconds: 5),
+        timeout: const Duration(seconds: 30),
         verificationCompleted: verified,
         verificationFailed: verificationFailed,
         codeSent: smsSent,
