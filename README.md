@@ -2,9 +2,9 @@
 
 Preview App :
 
-![Phone Number](/page1.jpeg)
+![Phone Number](/page1.jpeg | width=50)
 =====================
-![Verify OTP](/page2.jpeg)
+![Verify OTP](/page2.jpeg | width=50)
 =====================
-![Dashboard](/page3.jpeg)
+![Dashboard](/page3.jpeg | width=50)
 =====================
